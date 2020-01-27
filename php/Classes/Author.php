@@ -1,15 +1,21 @@
 <?php
+namespace GabrielTown\ObjectOriented;
+require_once("autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 
+use Ramsey\Uuid\Uuid;
 /*
  * A class that does something
  * @author Gabriel Town
  */
 
 class Author {
+	use ValidateUuid;
+
 	/*
 	 * State variable containing the id of author in question
 	 * Primary key
-	 * @var UUID $authorId
+	 * @var Uuid $authorId
 	 */
 	private $authorId;
 	/*
@@ -40,19 +46,48 @@ class Author {
 	 */
 	private $authorUsername;
 
-	public function __construct() {
-
+	public function __construct($authorId, $authorActivationToken, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername) {
+		try {
+			$this->setAuthorId($newAuthorId);
+			$this->setAuthorActivationToken($newAuthorActivationToken);
+			$this->setAuthorAvatarUrl($newAuthorAvatarUrl);
+			$this->setAuthorEmail($newAuthorEmail);
+			$this->setAuthorHash($newAuthorHash);
+			$this->setAuthorUsername($newAuthorUsername);
+		}
+			//determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
 	} //end of construct function
 
-	public function getAuthorId() : string {
-		return $this->authorId;
+	/**
+	 * accessor method for author id
+	 *
+	 * @return Uuid value of author id
+	 **/
+	public function getAuthorId() : \Ramsey\Uuid\Uuid {
+		return($this->authorId);
 	} //end of getAuthorId function
 
-	public function setAuthorId(string $newAuthorId) {
-		if(strlen($newAuthorId) != 32){
-			throw new \Exception("Author ID must be a UUID ", 1);
+	/**
+	 * mutator method for tweet id
+	 *
+	 * @param Uuid|string $newAuthorId new value of author id
+	 * @throws \RangeException if $newAtuhorId is not positive
+	 * @throws \TypeError if $newAuthorId is not a uuid or string
+	 **/
+	public function setAuthorId($newAuthorId) {
+		try {
+			$uuid = self::validateUuid($newAuthorId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
 		}
-		$this->authorId = $newAuthorId;
+
+		// convert and store the author id
+		$this->authorId = $uuid;
 	} //end of setAuthorId function
 
 	public function getAuthorActivationToken() : string {
