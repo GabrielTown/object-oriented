@@ -165,15 +165,18 @@ class Author {
 		if(strlen($newAuthorAvatarUrl) > 255) {
 			throw(new \RangeException("author avatar url is too large"));
 		}
+		if(!is_string($newAuthorAvatarUrl)) {
+			throw(new \TypeError("incorrect type"));
+		}
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
-	} //end of avatar function
+	} //end of set avatar function
 
 	/*
 	* @return string value of email
 	**/
 	public function getAuthorEmail(): string {
 		return $this->authorEmail;
-	}
+	} // end getAuthorEmail function
 
 	/**
 	 * mutator method for email
@@ -200,7 +203,46 @@ class Author {
 		}
 		// store the email
 		$this->authorEmail = $newAuthorEmail;
-	}
+	} // end of setAuthorEmail function
+
+	/**
+	 * accessor method for AuthorHash
+	 *
+	 * @return string value of hash
+	 */
+	public function getAuthorHash(): string {
+		return $this->authorHash;
+	} //end of getAuthorHash function
+
+	/**
+	 * mutator method for author hash password
+	 *
+	 * @param string $newAuthorHash
+	 * @throws \InvalidArgumentException if the hash is not secure
+	 * @throws \RangeException if the hash is not 128 characters
+	 * @throws \TypeError if profile hash is not a string
+	 */
+	public function setAuthorHash(string $newAuthorHash): void {
+		//enforce that the hash is properly formatted
+		$newAuthorHash = trim($newAuthorHash);
+		if(empty($newAuthorHash) === true) {
+			throw(new \InvalidArgumentException("author password hash empty or insecure"));
+		}
+		//enforce the hash is really an Argon hash
+		$authorHashInfo = password_get_info($newAuthorHash);
+		if($authorHashInfo["algoName"] !== "argon2i") {
+			throw(new \InvalidArgumentException("author hash is not a valid hash"));
+		}
+		//enforce that the hash is exactly 97 characters.
+		if(strlen($newAuthorHash) !== 97) {
+			throw(new \RangeException("author hash must be 97 characters"));
+		}
+		//store the hash
+		$this->authorHash = $newAuthorHash;
+	} //end of setAuthorHash function
+
+
+
 
 
 
