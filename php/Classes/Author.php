@@ -242,6 +242,36 @@ class Author {
 	} //end of setAuthorHash function
 
 
+	/*
+	* @return string value of username
+	**/
+	public function getAuthorUsername(): string {
+		return $this->authorUsername;
+	} // end getAuthorUsername function
+
+	/**
+	 * mutator method for Username
+	 *
+	 * @param string $newAuthorUsername new value of username
+	 * @throws \InvalidArgumentException if the username is empty
+	 * @throws \RangeException if $newAuthorUsername is > 32 characters
+	 * @throws \TypeError if $newAuthorUsername is not a string
+	 **/
+	public function setAuthorUsername(string $newAuthorUsername): void {
+		if(empty($newAuthorUsername) === true) {
+			throw(new \InvalidArgumentException("author username is empty"));
+		}
+		// verify the username will fit in the database
+		if(strlen($newAuthorUsername) > 32) {
+			throw(new \RangeException("author username is too large"));
+		}
+		// verify email is a string
+		if(!is_string($newAuthorUsername)) {
+			throw(new \TypeError("incorrect type"));
+		}
+		// store the username
+		$this->authorUsername = $newAuthorUsername;
+	} // end of setAuthorUsername function
 
 
 
