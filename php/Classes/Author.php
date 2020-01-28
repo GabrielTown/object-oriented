@@ -155,7 +155,7 @@ class Author {
 	 @throws \TypeError if $newAuthorAvatarUrl is not a string
 	*/
 
-	public function setAuthorAvatarUrl(string $newAuthorAvatarUrl): string {
+	public function setAuthorAvatarUrl($newAuthorAvatarUrl): void {
 		//verify url is secure
 		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
 		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_VALIDATE_URL);
@@ -171,8 +171,9 @@ class Author {
 	} //end of set avatar function
 
 	/*
-	* @return string value of email
-	*
+	 *@return string value of email
+	 */
+
 	public function getAuthorEmail(): string {
 		return $this->authorEmail;
 	} // end getAuthorEmail function

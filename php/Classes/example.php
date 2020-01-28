@@ -18,6 +18,7 @@ use Ramsey\Uuid\Uuid;
  **/
 class Profile {
 	use ValidateUuid;
+	use ValidateDate;
 	/**
 	 * id for this Profile; this is the primary key
 	 * @var Uuid $profileId
@@ -174,6 +175,9 @@ class Profile {
 		// verify the email will fit in the database
 		if(strlen($newProfileEmail) > 128) {
 			throw(new \RangeException("profile email is too large"));
+		}
+		if(!is_string($newProfileEmail)){
+			throw(new \TypeError("incorrect type"));
 		}
 		// store the email
 		$this->profileEmail = $newProfileEmail;
