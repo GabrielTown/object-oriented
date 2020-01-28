@@ -1,5 +1,5 @@
 <?php
-namespace GabrielTown/ObjectOriented\;
+namespace GabrielTown\ObjectOriented;
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
  * 2. binary string (16 bytes)
  * 3. Ramsey\Uuid\Uuid object
  *
- * @author Gabriel Town
+ * @author Daniel McDonald <dmcdonald21@cnm.edu>
  * @package Edu\Cnm\Misquote
  **/
 trait ValidateUuid {

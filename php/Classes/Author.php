@@ -11,16 +11,16 @@ use Ramsey\Uuid\Uuid;
 
 class Author {
 	use ValidateUuid;
+	use ValidateDate;
 
 	/*
-	 * State variable containing the id of author in question
-	 * Primary key
+	 * State variable containing the id of author in question; This is the Primary key
 	 * @var Uuid $authorId
 	 */
 	private $authorId;
 	/*
 	 * State variable containing the activation token of author in question
-	 * @var string $authorActivationToken
+	 * @var $authorActivationToken
 	 */
 	private $authorActivationToken;
 	/*
@@ -36,7 +36,7 @@ class Author {
 	private $authorEmail;
 	/*
 	 * State variable containing the Hash of author in question
-	 * @var string $authorHash
+	 * @var $authorHash
 	 */
 	private $authorHash;
 	/*
@@ -46,6 +46,21 @@ class Author {
 	 */
 	private $authorUsername;
 
+	/**
+	 * constructor for this Author
+	 *
+	 * @param string|Uuid $newAuthorId id of this Author or null if a new Author
+	 * @param string $newAuthorActivationToken activation token of the Author
+	 * @param string $newAuthorAvatarUrl string containing avatar url of Author
+	 * @param string $newAuthorEmail string containing email of Author
+	 * @param string $newAuthorHash string containing hash of Author
+	 * @param string $newAuthorUsername string containing Username of Author
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 **/
 	public function __construct($authorId, $authorActivationToken, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername) {
 		try {
 			$this->setAuthorId($newAuthorId);
@@ -65,7 +80,7 @@ class Author {
 	/**
 	 * accessor method for author id
 	 *
-	 * @return Uuid value of author id
+	 * @return Uuid value of author id (or null if new Profile)
 	 **/
 	public function getAuthorId() : \Ramsey\Uuid\Uuid {
 		return($this->authorId);
@@ -78,7 +93,7 @@ class Author {
 	 * @throws \RangeException if $newAtuhorId is not positive
 	 * @throws \TypeError if $newAuthorId is not a uuid or string
 	 **/
-	public function setAuthorId($newAuthorId) {
+	public function setAuthorId($newAuthorId): void {
 		try {
 			$uuid = self::validateUuid($newAuthorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -90,16 +105,68 @@ class Author {
 		$this->authorId = $uuid;
 	} //end of setAuthorId function
 
-	public function getAuthorActivationToken() : string {
+	/**
+	 * accessor method for author activation token
+	 *
+	 * @return string value of author activation token
+	 **/
+	public function getAuthorActivationToken(): string {
 		return $this->authorActivationToken;
 	} //end of getAuthorActivationToken function
 
-	public function setAuthorActivationToken(string $newAuthorActivationToken) {
-		if(strlen($newAuthorActivationToken) != 32){
-			throw new \Exception("Activation Token must be 32 characters ", 1);
+	/**
+	 * mutator method for activation token
+	 *
+	 * @param string $newAuthorActivationToken value of activation token
+	 * @throws \InvalidArgumentException  if the token is not a string or insecure
+	 * @throws \RangeException if $newAuthorActivationToken is not exactly 32 characters
+	 * @throws \TypeError if $newAuthorActivationToken is not  string
+	 **/
+	public function setAuthorActivationToken(string $newAuthorActivationToken): void {
+		if($newAuthorActivationToken === null) {
+			$this->authorActivationToken = null;
+			return;
+		}
+		$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
+		if(ctype_xdigit($newAuthorActivationToken) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		if(strlen($newAuthorActivationToken) !== 32){
+			throw(new\RangeException("Activation Token must be 32 characters "));
 		}
 		$this->authorActivationToken = $newAuthorActivationToken;
 	} //end of setAuthorActivationToken function
+
+	/**
+	 * accessor method for author avatar url
+	 *
+	 * @return string value of author avatar url
+	 **/
+	public function getAuthorAvatarUrl(): string {
+		return $this->authorAvatarUrl;
+	} //end of getAuthorAvatarUrl function
+
+	/**
+	 * mutator method for avatar url
+	 *
+	 * @param string $newAuthorAvatarUrl new value of avatar url
+	 * @throws \InvalidArgumentException if $newAuthorAvatarUrl is not a valid url or insecure
+	 * @throws \RangeException if $newAuthorAvatarUrl is > 255 characters
+	 * @throws \TypeError if $newAuthorAvatarUrl is not a string
+	**/
+	public function setAuthorAvatarUrl(string $newAuthorAvatarUrl): string {
+		//verify url is secure
+		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
+		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_VALIDATE_URL);
+		if(empty($newAuthorAvatarUrl)===true) {
+			throw(new \InvalidArgumentException("url is empty or insecure"));
+		}
+		//verify url will fit database
+		if(strlen($newAuthorAvatarUrl) > 255) {
+			throw(new \RangeException("author avatar url is too large"));
+		}
+		$this->authorAvatarUrl = $newAuthorAvatarUrl;
+	} //end of avatar function
 
 
 
