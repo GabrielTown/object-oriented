@@ -8,8 +8,7 @@ use Ramsey\Uuid\Uuid;
  * A class that takes author data and puts it in a database
  * @author Gabriel Town <rieltown@gmail.com>
  */
-
-class Author {
+class Author implements  \JsonSerializable {
 	use ValidateUuid;
 	use ValidateDate;
 
