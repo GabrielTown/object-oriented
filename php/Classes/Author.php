@@ -168,6 +168,40 @@ class Author {
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	} //end of avatar function
 
+	/*
+	* @return string value of email
+	**/
+	public function getAuthorEmail(): string {
+		return $this->authorEmail;
+	}
+
+	/**
+	 * mutator method for email
+	 *
+	 * @param string $newAuthorEmail new value of email
+	 * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
+	 * @throws \RangeException if $newAuthorEmail is > 128 characters
+	 * @throws \TypeError if $newAuthorEmail is not a string
+	 **/
+	public function setAuthorEmail(string $newAuthorEmail): void {
+		// verify the email is secure
+		$newAuthorEmail = trim($newAuthorEmail);
+		$newAuthorEmail = filter_var($newAuthorEmail, FILTER_VALIDATE_EMAIL);
+		if(empty($newAuthorEmail) === true) {
+			throw(new \InvalidArgumentException("author email is empty or insecure"));
+		}
+		// verify the email will fit in the database
+		if(strlen($newAuthorEmail) > 128) {
+			throw(new \RangeException("author email is too large"));
+		}
+		// verify email is a string
+		if(!is_string($newAuthorEmail)) {
+			throw(new \TypeError("incorrect type"));
+		}
+		// store the email
+		$this->authorEmail = $newAuthorEmail;
+	}
+
 
 
 
