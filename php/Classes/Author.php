@@ -50,18 +50,18 @@ class Author {
 	 * constructor for this Author
 	 *
 	 * @param string|Uuid $newAuthorId id of this Author or null if a new Author
-	 * @param string $newAuthorActivationToken activation token of the Author
-	 * @param string $newAuthorAvatarUrl string containing avatar url of Author
-	 * @param string $newAuthorEmail string containing email of Author
-	 * @param string $newAuthorHash string containing hash of Author
-	 * @param string $newAuthorUsername string containing Username of Author
+	 * @param $newAuthorActivationToken
+	 * @param $newAuthorAvatarUrl
+	 * @param $newAuthorEmail
+	 * @param $newAuthorHash
+	 * @param $newAuthorUsername
 	 * @throws \InvalidArgumentException if data types are not valid
 	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
 	 * @throws \TypeError if data types violate type hints
 	 * @throws \Exception if some other exception occurs
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
-	 **/
-	public function __construct($authorId, $authorActivationToken, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername) {
+	 */
+	public function __construct($newAuthorId, $newAuthorActivationToken, $newAuthorAvatarUrl, $newAuthorEmail, $newAuthorHash, $newAuthorUsername) {
 		try {
 			$this->setAuthorId($newAuthorId);
 			$this->setAuthorActivationToken($newAuthorActivationToken);
@@ -273,8 +273,5 @@ class Author {
 		$this->authorUsername = $newAuthorUsername;
 	} // end of setAuthorUsername function
 
-
-
-
-
 } //end of Author class
+
