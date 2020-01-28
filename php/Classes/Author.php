@@ -1,12 +1,12 @@
 <?php
 namespace GabrielTown\ObjectOriented;
 require_once("autoload.php");
-require_once(dirname(__DIR__) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/Classes/autoload.php");
 
 use Ramsey\Uuid\Uuid;
 /*
- * A class that does something
- * @author Gabriel Town
+ * A class that takes author data and puts it in a database
+ * @author Gabriel Town <rieltown@gmail.com>
  */
 
 class Author {
@@ -82,7 +82,7 @@ class Author {
 	 *
 	 * @return Uuid value of author id (or null if new Profile)
 	 **/
-	public function getAuthorId() : \Ramsey\Uuid\Uuid {
+	public function getAuthorId() : Uuid {
 		return($this->authorId);
 	} //end of getAuthorId function
 
@@ -146,14 +146,15 @@ class Author {
 		return $this->authorAvatarUrl;
 	} //end of getAuthorAvatarUrl function
 
-	/**
-	 * mutator method for avatar url
-	 *
-	 * @param string $newAuthorAvatarUrl new value of avatar url
-	 * @throws \InvalidArgumentException if $newAuthorAvatarUrl is not a valid url or insecure
-	 * @throws \RangeException if $newAuthorAvatarUrl is > 255 characters
-	 * @throws \TypeError if $newAuthorAvatarUrl is not a string
-	**/
+
+	/* Mutator method for avatar url
+
+	 @param string $newAuthorAvatarUrl new value of avatar url
+	 @throws \InvalidArgumentException if $newAuthorAvatarUrl is not a valid url or insecure
+	 @throws \RangeException if $newAuthorAvatarUrl is > 255 characters
+	 @throws \TypeError if $newAuthorAvatarUrl is not a string
+	*/
+
 	public function setAuthorAvatarUrl(string $newAuthorAvatarUrl): string {
 		//verify url is secure
 		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
@@ -165,15 +166,13 @@ class Author {
 		if(strlen($newAuthorAvatarUrl) > 255) {
 			throw(new \RangeException("author avatar url is too large"));
 		}
-		if(!is_string($newAuthorAvatarUrl)) {
-			throw(new \TypeError("incorrect type"));
-		}
+
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	} //end of set avatar function
 
 	/*
 	* @return string value of email
-	**/
+	*
 	public function getAuthorEmail(): string {
 		return $this->authorEmail;
 	} // end getAuthorEmail function
@@ -197,10 +196,7 @@ class Author {
 		if(strlen($newAuthorEmail) > 128) {
 			throw(new \RangeException("author email is too large"));
 		}
-		// verify email is a string
-		if(!is_string($newAuthorEmail)) {
-			throw(new \TypeError("incorrect type"));
-		}
+
 		// store the email
 		$this->authorEmail = $newAuthorEmail;
 	} // end of setAuthorEmail function
@@ -233,9 +229,9 @@ class Author {
 		if($authorHashInfo["algoName"] !== "argon2i") {
 			throw(new \InvalidArgumentException("author hash is not a valid hash"));
 		}
-		//enforce that the hash is exactly 97 characters.
-		if(strlen($newAuthorHash) !== 97) {
-			throw(new \RangeException("author hash must be 97 characters"));
+		//enforce that the hash is exactly 96 characters.
+		if(strlen($newAuthorHash) !== 96) {
+			throw(new \RangeException("author hash must be 96 characters"));
 		}
 		//store the hash
 		$this->authorHash = $newAuthorHash;
@@ -261,17 +257,23 @@ class Author {
 		if(empty($newAuthorUsername) === true) {
 			throw(new \InvalidArgumentException("author username is empty"));
 		}
-		// verify the username will fit in the database
-		if(strlen($newAuthorUsername) > 32) {
-			throw(new \RangeException("author username is too large"));
-		}
-		// verify email is a string
-		if(!is_string($newAuthorUsername)) {
-			throw(new \TypeError("incorrect type"));
-		}
+
 		// store the username
 		$this->authorUsername = $newAuthorUsername;
 	} // end of setAuthorUsername function
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["authorId"] = $this->authorId->toString();
+
+		return($fields);
+	}
 
 } //end of Author class
 
