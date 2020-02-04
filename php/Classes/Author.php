@@ -263,19 +263,6 @@ class Author implements  \JsonSerializable {
 	} // end of setAuthorUsername function
 
 	/**
-	 * formats the state variables for JSON serialization
-	 *
-	 * @return array resulting state variables to serialize
-	 **/
-	public function jsonSerialize() : array {
-		$fields = get_object_vars($this);
-
-		$fields["authorId"] = $this->authorId->toString();
-
-		return($fields);
-	}
-
-	/**
 	 * inserts this Author into mySQL
 	 *
 	 * @param \PDO $pdo PDO connection object
@@ -398,6 +385,19 @@ class Author implements  \JsonSerializable {
 			}
 		}
 		return ($authors);
+	}
+
+	/**
+	 * formats the state variables for JSON serialization
+	 *
+	 * @return array resulting state variables to serialize
+	 **/
+	public function jsonSerialize() : array {
+		$fields = get_object_vars($this);
+
+		$fields["authorId"] = $this->authorId->toString();
+
+		return($fields);
 	}
 
 } //end of Author class
