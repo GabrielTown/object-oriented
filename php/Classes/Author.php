@@ -86,7 +86,7 @@ class Author implements  \JsonSerializable {
 	} //end of getAuthorId function
 
 	/**
-	 * mutator method for tweet id
+	 * mutator method for author id
 	 *
 	 * @param Uuid|string $newAuthorId new value of author id
 	 * @throws \RangeException if $newAtuhorId is not positive
@@ -293,9 +293,7 @@ class Author implements  \JsonSerializable {
 		$query = "UPDATE author SET authorActivationToken = :authorActivationToken, authorAvatarUrl = :authorAvatarUrl, authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = :authorUsername WHERE authorId = :authorId";
 		$statement = $pdo->prepare($query);
 
-
-		$formattedDate = $this->tweetDate->format("Y-m-d H:i:s.u");
-		$parameters = ["tweetId" => $this->tweetId->getBytes(),"tweetProfileId" => $this->tweetProfileId->getBytes(), "tweetContent" => $this->tweetContent, "tweetDate" => $formattedDate];
+		$parameters = ["authorId" => $this->authorId->getBytes(),"authorProfileId" => $this->authorProfileId->getBytes(), "authorContent" => $this->authorContent, "authorDate" => $formattedDate];
 		$statement->execute($parameters);
 	}
 
@@ -327,7 +325,7 @@ class Author implements  \JsonSerializable {
 	 * @throws \TypeError when a variable are not the correct data type
 	 **/
 	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
-		// sanitize the tweetId before searching
+		// sanitize the authorId before searching
 		try {
 			$authorId = self::validateUuid($authorId);
 		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
@@ -342,7 +340,7 @@ class Author implements  \JsonSerializable {
 		$parameters = ["authorId" => $authorId->getBytes()];
 		$statement->execute($parameters);
 
-		// grab the tweet from mySQL
+		// grab the author from mySQL
 		try {
 			$author = null;
 			$statement->setFetchMode(\PDO::FETCH_ASSOC);
