@@ -254,6 +254,9 @@ class Author implements  \JsonSerializable {
 	 * @throws \TypeError if $newAuthorUsername is not a string
 	 **/
 	public function setAuthorUsername(string $newAuthorUsername): void {
+		// verify the username is secure
+		$newAuthorUsername = trim($newAuthorUsername);
+		$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		if(empty($newAuthorUsername) === true) {
 			throw(new \InvalidArgumentException("author username is empty"));
 		}
